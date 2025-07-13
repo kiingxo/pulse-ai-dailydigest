@@ -237,11 +237,19 @@ Generated digest for the period {self.start_date.strftime('%Y-%m-%d')} to {self.
     def save_digest(self, digest_content: str) -> str:
         """Save the digest to a markdown file."""
         today = datetime.now().strftime('%Y-%m-%d')
-        filename = f"{today}-ai-digest.md"
+        current_time = datetime.now().strftime('%H:%M UTC')
+        
+        # Create filename with actual time
+        time_suffix = current_time.replace(':', '-')
+        filename = f"{today}-ai-digest-{time_suffix}.md"
         filepath = self.digests_dir / filename
         
+        # Add time header to content
+        header = f"# AI Digest - {today} ({time_suffix.title()})\n\n"
+        full_content = header + digest_content
+        
         with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(digest_content)
+            f.write(full_content)
         
         logger.info(f"Digest saved to {filepath}")
         return str(filepath)
@@ -254,7 +262,9 @@ Generated digest for the period {self.start_date.strftime('%Y-%m-%d')} to {self.
             
             # Commit
             today = datetime.now().strftime('%Y-%m-%d')
-            commit_message = f"🤖 Add AI Digest for {today}"
+            current_time = datetime.now().strftime('%H:%M UTC')
+            
+            commit_message = f"🤖 Add AI Digest for {today} ({current_time})"
             subprocess.run(['git', 'commit', '-m', commit_message], check=True)
             
             # Push
