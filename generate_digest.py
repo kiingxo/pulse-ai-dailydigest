@@ -274,20 +274,11 @@ Generated digest for the period {self.start_date.strftime('%Y-%m-%d')} to {self.
             # Collect data from all repositories
             all_repo_data = []
             
-            # DEBUG: Print repos list
-            print(f"\n===== DEBUG: self.repos = {self.repos} =====")
-            
             for repo in self.repos:
                 repo = repo.strip()
                 if repo:
                     data = self.collect_repo_data(repo)
                     all_repo_data.append(data)
-
-            # DEBUG: Print collected data
-            import pprint
-            print("\n===== DEBUG: Collected Repo Data =====")
-            pprint.pprint(all_repo_data)
-            print("===== END DEBUG =====\n")
             
             # Generate digest
             digest_content = self.generate_digest(all_repo_data)
