@@ -53,6 +53,9 @@ Thumbs.db
 *.log
 logs/
 
+# Generated digest files (ignore local, only use remote)
+digests/
+
 # Temporary files
 *.tmp
 *.temp
