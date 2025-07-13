@@ -2,8 +2,9 @@ name: Generate AI Digest
 
 on:
   schedule:
-    # Run every 2 days at 9 AM UTC
-    - cron: '0 9 * * *'
+    # Run twice daily: 8 AM and 9 PM UTC
+    - cron: '0 8 * * *'  # 8 AM UTC
+    - cron: '0 21 * * *' # 9 PM UTC
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
