@@ -1,5 +1,7 @@
 # AI Digest Generator for BlueprintLabs
 
+![Built by BlueprintLabs](https://img.shields.io/badge/built%20by-BlueprintLabs-0057ff?style=flat-square)
+
 🤖 Automated GitHub activity summaries for BlueprintLabs startup projects using Google Gemini 1.5 Flash.
 
 ## Overview
@@ -253,6 +255,8 @@ For issues and questions:
 3. Open an issue in this repository
 
 ---
+
+![Built by BlueprintLabs](https://img.shields.io/badge/built%20by-BlueprintLabs-0057ff?style=flat-square)
 
 **Built for BlueprintLabs** 🚀
 *Empowering AI startups with intelligent insights* 
