@@ -23,16 +23,16 @@ logger = logging.getLogger(__name__)
 
 class AIDigestGenerator:
     def __init__(self):
-        self.github_token = os.getenv('GITHUB_ACCESS_TOKEN')
+        self.github_token = os.getenv('PAT_TOKEN')
         self.gemini_api_key = os.getenv('GEMINI_API_KEY')
-        self.repos = os.getenv('GITHUB_REPOS', '').split(',')
+        self.repos = os.getenv('REPO_LIST', '').split(',')
         
         if not self.github_token:
-            raise ValueError("GITHUB_ACCESS_TOKEN environment variable is required")
+            raise ValueError("PAT_TOKEN environment variable is required")
         if not self.gemini_api_key:
             raise ValueError("GEMINI_API_KEY environment variable is required")
         if not self.repos:
-            raise ValueError("GITHUB_REPOS environment variable is required")
+            raise ValueError("REPO_LIST environment variable is required")
         
         # Initialize GitHub client
         self.github = Github(auth=Auth.Token(self.github_token))

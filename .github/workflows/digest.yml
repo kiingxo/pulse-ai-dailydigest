@@ -33,9 +33,9 @@ jobs:
     
     - name: Generate AI Digest
       env:
-        GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        GITHUB_REPOS: ${{ secrets.GITHUB_REPOS }}
+        REPO_LIST: ${{ secrets.REPO_LIST }}
       run: |
         python generate_digest.py
     
