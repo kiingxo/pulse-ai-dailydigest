@@ -23,12 +23,12 @@ logger = logging.getLogger(__name__)
 
 class AIDigestGenerator:
     def __init__(self):
-        self.github_token = os.getenv('GITHUB_TOKEN')
+        self.github_token = os.getenv('GITHUB_ACCESS_TOKEN')
         self.gemini_api_key = os.getenv('GEMINI_API_KEY')
         self.repos = os.getenv('GITHUB_REPOS', '').split(',')
         
         if not self.github_token:
-            raise ValueError("GITHUB_TOKEN environment variable is required")
+            raise ValueError("GITHUB_ACCESS_TOKEN environment variable is required")
         if not self.gemini_api_key:
             raise ValueError("GEMINI_API_KEY environment variable is required")
         if not self.repos:
@@ -45,9 +45,9 @@ class AIDigestGenerator:
         self.digests_dir = Path('digests')
         self.digests_dir.mkdir(exist_ok=True)
         
-        # Calculate date range (last 2 days)
+        # Calculate date range (last 30 days for testing)
         self.end_date = datetime.now()
-        self.start_date = self.end_date - timedelta(days=2)
+        self.start_date = self.end_date - timedelta(days=30)
         
         logger.info(f"Generating digest for period: {self.start_date.date()} to {self.end_date.date()}")
     
@@ -273,11 +273,21 @@ Generated digest for the period {self.start_date.strftime('%Y-%m-%d')} to {self.
             
             # Collect data from all repositories
             all_repo_data = []
+            
+            # DEBUG: Print repos list
+            print(f"\n===== DEBUG: self.repos = {self.repos} =====")
+            
             for repo in self.repos:
                 repo = repo.strip()
                 if repo:
                     data = self.collect_repo_data(repo)
                     all_repo_data.append(data)
+
+            # DEBUG: Print collected data
+            import pprint
+            print("\n===== DEBUG: Collected Repo Data =====")
+            pprint.pprint(all_repo_data)
+            print("===== END DEBUG =====\n")
             
             # Generate digest
             digest_content = self.generate_digest(all_repo_data)
