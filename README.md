@@ -44,7 +44,7 @@ Navigate to your repository → Settings → Secrets and variables → Actions, 
 
 #### Required Secrets:
 
-- **`GITHUB_TOKEN`**: 
+- **`PAT_TOKEN`**: 
   - Go to Settings → Developer settings → Personal access tokens → Tokens (classic)
   - Generate a new token with `repo` scope
   - Copy the token and add it as a secret
@@ -107,7 +107,7 @@ To run the script locally:
 
 2. Set environment variables:
    ```bash
-   export GITHUB_TOKEN="your_github_token"
+   export PAT_TOKEN="your_PAT_TOKEN"
    export GEMINI_API_KEY="your_gemini_api_key"
    export GITHUB_REPOS="owner/repo1,owner/repo2"
    ```
@@ -199,8 +199,8 @@ This period saw significant progress across all BlueprintLabs projects, with 23 
 
 ### Common Issues
 
-1. **"GITHUB_TOKEN environment variable is required"**
-   - Ensure the `GITHUB_TOKEN` secret is properly configured
+1. **"PAT_TOKEN environment variable is required"**
+   - Ensure the `PAT_TOKEN` secret is properly configured
    - Verify the token has the `repo` scope
 
 2. **"GEMINI_API_KEY environment variable is required"**
