@@ -54,14 +54,14 @@ Navigate to your repository → Settings → Secrets and variables → Actions, 
   - Create a new API key
   - Copy the key and add it as a secret
 
-- **`GITHUB_REPOS`**:
+- **`REPO_LIST`**:
   - Comma-separated list of repository names (format: `owner/repo-name`)
   - Example: `BlueprintLabs/TagPilot,BlueprintLabs/BrainCrate,BlueprintLabs/ai-cofounder`
   - Include the full repository names as they appear in GitHub URLs
 
 ### 3. Repository Permissions
 
-Ensure your GitHub token has access to all repositories listed in `GITHUB_REPOS`. For private repositories, the token owner must have access to them.
+Ensure your GitHub token has access to all repositories listed in `REPO_LIST`. For private repositories, the token owner must have access to them.
 
 ### 4. Manual Testing
 
@@ -75,7 +75,7 @@ You can test the automation manually:
 
 ### Customizing Repository List
 
-Update the `GITHUB_REPOS` secret with your repository names:
+Update the `REPO_LIST` secret with your repository names:
 
 ```
 BlueprintLabs/TagPilot,BlueprintLabs/BrainCrate,BlueprintLabs/ai-cofounder
@@ -109,7 +109,7 @@ To run the script locally:
    ```bash
    export PAT_TOKEN="your_PAT_TOKEN"
    export GEMINI_API_KEY="your_gemini_api_key"
-   export GITHUB_REPOS="owner/repo1,owner/repo2"
+   export REPO_LIST="owner/repo1,owner/repo2"
    ```
 
 3. Run the script:
@@ -208,7 +208,7 @@ This period saw significant progress across all BlueprintLabs projects, with 23 
    - Verify the API key is valid and has sufficient quota
 
 3. **"Repository not found" errors**
-   - Ensure all repositories in `GITHUB_REPOS` exist and are accessible
+   - Ensure all repositories in `REPO_LIST` exist and are accessible
    - Verify the GitHub token has access to all listed repositories
 
 4. **Empty digests**
