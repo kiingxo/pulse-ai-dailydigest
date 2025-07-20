@@ -66,9 +66,11 @@ class AIDigestGenerator:
                 'file_changes': []
             }
             
-            # Collect commits
+            # Check for recent commits first
             commits = repo.get_commits(since=self.start_date, until=self.end_date)
+            commit_count = 0
             for commit in commits:
+                commit_count += 1
                 data['commits'].append({
                     'sha': commit.sha[:8],
                     'message': commit.commit.message,
@@ -77,12 +79,14 @@ class AIDigestGenerator:
                     'files_changed': [f.filename for f in commit.files] if commit.files else []
                 })
             
-            # Collect pull requests
+            # Check for recent PRs
             prs = repo.get_pulls(state='all', sort='updated', direction='desc')
+            pr_count = 0
             for pr in prs:
                 # Convert timezone-aware datetime to naive for comparison
                 pr_updated_naive = pr.updated_at.replace(tzinfo=None)
                 if self.start_date <= pr_updated_naive <= self.end_date:
+                    pr_count += 1
                     data['pull_requests'].append({
                         'number': pr.number,
                         'title': pr.title,
@@ -95,12 +99,14 @@ class AIDigestGenerator:
                         'files_changed': [f.filename for f in pr.get_files()]
                     })
             
-            # Collect issues
+            # Check for recent issues
             issues = repo.get_issues(state='all', sort='updated', direction='desc')
+            issue_count = 0
             for issue in issues:
                 # Convert timezone-aware datetime to naive for comparison
                 issue_updated_naive = issue.updated_at.replace(tzinfo=None)
                 if self.start_date <= issue_updated_naive <= self.end_date:
+                    issue_count += 1
                     data['issues'].append({
                         'number': issue.number,
                         'title': issue.title,
@@ -113,8 +119,14 @@ class AIDigestGenerator:
                         'comments_count': issue.comments
                     })
             
-            logger.info(f"Collected {len(data['commits'])} commits, {len(data['pull_requests'])} PRs, {len(data['issues'])} issues from {repo_name}")
-            return data
+            total_activity = commit_count + pr_count + issue_count
+            
+            if total_activity == 0:
+                logger.info(f"No activity in the past 24 hours for {repo_name} - skipping from digest")
+                return None
+            else:
+                logger.info(f"Collected {commit_count} commits, {pr_count} PRs, {issue_count} issues from {repo_name}")
+                return data
             
         except Exception as e:
             logger.error(f"Error collecting data from {repo_name}: {e}")
@@ -127,7 +139,7 @@ class AIDigestGenerator:
         valid_repos = [repo for repo in all_repo_data if 'error' not in repo]
         
         if not valid_repos:
-            return "No valid repository data found for the specified period."
+            return "No activity found in any repositories for the past 24 hours."
         
         prompt = f"""You are an AI assistant creating a daily pulse digest of GitHub activity for BlueprintLabs, a startup lab managing multiple AI-related projects.
 
@@ -293,7 +305,8 @@ Generated pulse digest for the last 24 hours ({self.start_date.strftime('%Y-%m-%
                 repo = repo.strip()
                 if repo:
                     data = self.collect_repo_data(repo)
-                    all_repo_data.append(data)
+                    if data is not None:  # Only add repositories with activity
+                        all_repo_data.append(data)
             
             # Generate digest
             digest_content = self.generate_digest(all_repo_data)
