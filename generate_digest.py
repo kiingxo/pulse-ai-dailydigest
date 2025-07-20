@@ -80,7 +80,9 @@ class AIDigestGenerator:
             # Collect pull requests
             prs = repo.get_pulls(state='all', sort='updated', direction='desc')
             for pr in prs:
-                if self.start_date <= pr.updated_at <= self.end_date:
+                # Convert timezone-aware datetime to naive for comparison
+                pr_updated_naive = pr.updated_at.replace(tzinfo=None)
+                if self.start_date <= pr_updated_naive <= self.end_date:
                     data['pull_requests'].append({
                         'number': pr.number,
                         'title': pr.title,
@@ -96,7 +98,9 @@ class AIDigestGenerator:
             # Collect issues
             issues = repo.get_issues(state='all', sort='updated', direction='desc')
             for issue in issues:
-                if self.start_date <= issue.updated_at <= self.end_date:
+                # Convert timezone-aware datetime to naive for comparison
+                issue_updated_naive = issue.updated_at.replace(tzinfo=None)
+                if self.start_date <= issue_updated_naive <= self.end_date:
                     data['issues'].append({
                         'number': issue.number,
                         'title': issue.title,
