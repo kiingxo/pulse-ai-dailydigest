@@ -1,21 +1,22 @@
-# AI Digest Generator for BlueprintLabs
+# Pulse AI - Daily Digest Generator
 
 ![Built by BlueprintLabs](https://img.shields.io/badge/built%20by-BlueprintLabs-0057ff?style=flat-square)
 
-🤖 Automated GitHub activity summaries for BlueprintLabs startup projects using Google Gemini 1.5 Flash.
+🤖 **Pulse AI** - Automated daily GitHub activity summaries for your startup projects using Google Gemini 1.5 Flash.
 
 ## Overview
 
-This automation generates comprehensive digests of GitHub activity across multiple repositories every 2 days. It analyzes commits, pull requests, and issues to create meaningful summaries that highlight key insights and next steps for your AI startup projects.
+This automation generates focused **24-hour pulse digests** of GitHub activity across multiple repositories. It analyzes commits, pull requests, and issues from the past day to create concise, actionable summaries that give you a daily pulse on your team's progress.
 
 ## Features
 
-- 🔍 **Multi-repo Analysis**: Collects data from multiple private repositories
-- 📊 **Comprehensive Coverage**: Analyzes commits, PRs, issues, and file changes
+- 🔍 **Multi-repo Analysis**: Collects data from multiple repositories (public/private)
+- ⚡ **24-Hour Focus**: Analyzes only the past 24 hours of activity for daily pulse
 - 🧠 **AI-Powered Summaries**: Uses Google Gemini 1.5 Flash for intelligent digest generation
-- 📅 **Automated Scheduling**: Runs every 2 days via GitHub Actions
-- 📝 **Markdown Output**: Clean, structured digests saved as markdown files
+- 📅 **Automated Scheduling**: Runs daily via GitHub Actions
+- 📝 **Markdown Output**: Clean, structured Pulse AI digests saved as markdown files
 - 🔄 **Auto-commit**: Automatically commits and pushes digest files back to the repo
+- 🚀 **Smart Filtering**: Skips repositories with no recent activity for efficiency
 
 ## Repository Structure
 
@@ -24,7 +25,7 @@ ai-digest/
 ├── .github/workflows/
 │   └── digest.yml          # GitHub Actions workflow
 ├── digests/                # Generated digest files
-│   └── YYYY-MM-DD-ai-digest.md
+│   └── YYYY-MM-DD-pulse-ai-HH-MM.md
 ├── generate_digest.py      # Main Python script
 ├── requirements.txt        # Python dependencies
 └── README.md              # This file
@@ -56,7 +57,7 @@ Navigate to your repository → Settings → Secrets and variables → Actions, 
 
 - **`REPO_LIST`**:
   - Comma-separated list of repository names (format: `owner/repo-name`)
-  - Example: `BlueprintLabs/TagPilot,BlueprintLabs/BrainCrate,BlueprintLabs/ai-cofounder`
+  - Example: `kiingxo/pulse-ai-dailydigest,kiingxo/blueprint-website,kiingxo/portfolio-website`
   - Include the full repository names as they appear in GitHub URLs
 
 ### 3. Repository Permissions
@@ -68,7 +69,7 @@ Ensure your GitHub token has access to all repositories listed in `REPO_LIST`. F
 You can test the automation manually:
 
 1. Go to your repository → Actions
-2. Select "Generate AI Digest" workflow
+2. Select "Generate Pulse AI" workflow
 3. Click "Run workflow" → "Run workflow"
 
 ## Configuration
@@ -78,7 +79,7 @@ You can test the automation manually:
 Update the `REPO_LIST` secret with your repository names:
 
 ```
-BlueprintLabs/TagPilot,BlueprintLabs/BrainCrate,BlueprintLabs/ai-cofounder
+kiingxo/pulse-ai-dailydigest,kiingxo/blueprint-website,kiingxo/portfolio-website
 ```
 
 ### Modifying Schedule
@@ -87,11 +88,11 @@ Edit `.github/workflows/digest.yml` to change the schedule:
 
 ```yaml
 schedule:
-  # Current: Every 2 days at 9 AM UTC
-  - cron: '0 9 */2 * *'
+  # Current: Daily at 9 AM UTC
+  - cron: '0 9 * * *'
   
   # Alternative schedules:
-  # Daily at 9 AM: '0 9 * * *'
+  # Every 2 days: '0 9 */2 * *'
   # Weekly on Mondays: '0 9 * * 1'
   # Every 3 days: '0 9 */3 * *'
 ```
@@ -119,13 +120,13 @@ To run the script locally:
 
 ## Output Format
 
-The generated digest includes:
+The generated **Pulse AI** digest includes:
 
 ### 📋 Executive Summary
-High-level overview of the most significant changes across all repositories.
+High-level overview of the most significant changes in the past 24 hours.
 
 ### 🏗️ Repository Breakdown
-Detailed summary for each repository with:
+Detailed summary for each repository with recent activity:
 - Commit activity and key changes
 - Pull request status and descriptions
 - Issue updates and resolutions
@@ -133,66 +134,65 @@ Detailed summary for each repository with:
 
 ### 💡 Key Insights
 AI-generated insights about:
-- Development patterns and trends
+- Development patterns and trends from today's activity
 - Potential bottlenecks or concerns
 - Achievement highlights
 - Team collaboration patterns
 
 ### 🎯 Next Steps
-Recommended actions based on the activity:
+Recommended actions based on the recent activity:
 - Follow-up items from PRs and issues
 - Technical debt or refactoring needs
 - Priority items for upcoming sprints
 
 ### 🔧 Technical Highlights
-Notable technical changes:
+Notable technical changes from the past 24 hours:
 - Architecture improvements
 - Performance optimizations
 - Security updates
 - Dependency changes
 
-## Example Digest Output
+## Example Pulse AI Digest Output
 
 ```markdown
-# AI Digest - 2024-01-15
+# Pulse AI: 2025-07-20 - Daily Summary (09-00 UTC)
 
 ## 🎯 Executive Summary
-This period saw significant progress across all BlueprintLabs projects, with 23 commits, 5 new pull requests, and 8 issue updates. Key highlights include the completion of TagPilot's core tagging engine and major UI improvements in BrainCrate.
+Today's pulse shows focused progress across key projects with 8 commits, 2 new pull requests, and 3 issue updates in the past 24 hours. Highlights include the completion of the Pulse AI digest generator and UI improvements in the portfolio website.
 
 ## 📊 Repository Activity
 
-### 🏷️ BlueprintLabs/TagPilot
-**Description**: AI-powered content tagging and categorization platform
+### 🤖 kiingxo/pulse-ai-dailydigest
+**Description**: AI-powered daily digest generator for GitHub activity
 
-#### Commits (12)
-- **a1b2c3d4** by John Doe: Implement core tagging engine with ML model integration
-- **e5f6g7h8** by Jane Smith: Add support for custom tag categories
+#### Commits (3)
+- **a1b2c3d4** by kiingxo: Implement 24-hour activity filtering
+- **e5f6g7h8** by kiingxo: Add Pulse AI branding and daily summary format
 
-#### Pull Requests (3)
-- **#45** Enhanced tagging accuracy with new ML model (merged) by John Doe
-- **#46** Add bulk tagging functionality (open) by Jane Smith
+#### Pull Requests (1)
+- **#12** Convert to Pulse AI 24-hour daily digest format (merged) by kiingxo
 
-### 🧠 BlueprintLabs/BrainCrate
-**Description**: Knowledge management and AI collaboration platform
+### 🌐 kiingxo/portfolio-website
+**Description**: Personal portfolio website built with Next.js
 
-#### Commits (8)
-- **i9j0k1l2** by Alex Johnson: Redesign main dashboard UI with modern components
-- **m3n4o5p6** by Sarah Wilson: Implement real-time collaboration features
+#### Commits (5)
+- **i9j0k1l2** by kiingxo: Update project showcase with new Pulse AI project
+- **m3n4o5p6** by kiingxo: Improve responsive design for mobile devices
 
 ## 💡 Key Insights
-- **High Development Velocity**: 23 commits in 2 days indicates strong team productivity
-- **Focus on Core Features**: Majority of work centered on fundamental platform capabilities
-- **UI/UX Improvements**: Significant frontend work across multiple projects
+- **Focused Development**: 8 commits in 24 hours shows steady daily progress
+- **Product Launch**: Pulse AI digest generator completed and operational
+- **UI/UX Focus**: Portfolio updates indicate ongoing design improvements
 
 ## 🎯 Next Steps
-1. **Review Open PRs**: 2 pull requests need review and testing
-2. **Address Technical Debt**: Consider refactoring the tagging engine for better performance
-3. **Plan Integration**: Coordinate TagPilot and BrainCrate integration features
+1. **Monitor Pulse AI**: Track the daily digest generation performance
+2. **Portfolio Polish**: Continue mobile responsiveness improvements
+3. **Documentation**: Update project documentation for new features
 
 ## 🔧 Technical Highlights
-- **ML Model Integration**: New tagging engine with 95% accuracy improvement
-- **Modern UI Framework**: Migration to React 18 with improved performance
-- **Real-time Features**: WebSocket implementation for live collaboration
+- **24-Hour Filtering**: New time-based activity filtering for focused daily digests
+- **Pulse AI Branding**: Consistent branding and formatting across all outputs
+- **Smart Repository Filtering**: Automatic skipping of inactive repositories
 ```
 
 ## Troubleshooting
@@ -212,8 +212,9 @@ This period saw significant progress across all BlueprintLabs projects, with 23 
    - Verify the GitHub token has access to all listed repositories
 
 4. **Empty digests**
-   - Check if there's actually activity in the specified time period
+   - Check if there's actually activity in the past 24 hours
    - Verify repository names are in the correct format (`owner/repo`)
+   - The system now automatically skips repositories with no recent activity
 
 ### Debugging
 
