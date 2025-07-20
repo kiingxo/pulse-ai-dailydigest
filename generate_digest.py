@@ -261,8 +261,15 @@ Generated pulse digest for the last 24 hours ({self.start_date.strftime('%Y-%m-%
         filename = f"{today}-pulse-ai-{time_suffix}.md"
         filepath = self.digests_dir / filename
         
-        # Add time header to content
+        # Add time header to content and ensure it's not overridden by AI response
         header = f"# Pulse AI: {today} - Daily Summary ({time_suffix.title()})\n\n"
+        
+        # Remove any existing title from the AI response to avoid duplication
+        lines = digest_content.split('\n')
+        if lines and lines[0].startswith('# '):
+            # Skip the first line if it's a title
+            digest_content = '\n'.join(lines[1:])
+        
         full_content = header + digest_content
         
         with open(filepath, 'w', encoding='utf-8') as f:
