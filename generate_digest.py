@@ -45,9 +45,9 @@ class AIDigestGenerator:
         self.digests_dir = Path('digests')
         self.digests_dir.mkdir(exist_ok=True)
         
-        # Calculate date range (last 30 days for testing)
+        # Calculate date range (last 24 hours)
         self.end_date = datetime.now()
-        self.start_date = self.end_date - timedelta(days=30)
+        self.start_date = self.end_date - timedelta(days=1)
         
         logger.info(f"Generating digest for period: {self.start_date.date()} to {self.end_date.date()}")
     
@@ -125,9 +125,9 @@ class AIDigestGenerator:
         if not valid_repos:
             return "No valid repository data found for the specified period."
         
-        prompt = f"""You are an AI assistant creating a comprehensive digest of GitHub activity for BlueprintLabs, a startup lab managing multiple AI-related projects.
+        prompt = f"""You are an AI assistant creating a daily pulse digest of GitHub activity for BlueprintLabs, a startup lab managing multiple AI-related projects.
 
-PERIOD: {self.start_date.strftime('%Y-%m-%d')} to {self.end_date.strftime('%Y-%m-%d')}
+PERIOD: Last 24 hours ({self.start_date.strftime('%Y-%m-%d %H:%M')} to {self.end_date.strftime('%Y-%m-%d %H:%M')})
 
 REPOSITORY ACTIVITY DATA:
 """
@@ -166,15 +166,16 @@ REPOSITORY ACTIVITY DATA:
         
         prompt += """
 
-TASK: Create a comprehensive, well-structured markdown digest that includes:
+TASK: Create a "Pulse AI" daily digest with the title "Pulse AI: [Date] - Daily Summary" that includes:
 
-1. **Executive Summary** - High-level overview of the most significant changes
-2. **Repository Breakdown** - Detailed summary for each repository
-3. **Key Insights** - Important patterns, achievements, or concerns identified
-4. **Next Steps** - Recommended actions based on the activity
-5. **Technical Highlights** - Notable technical changes or improvements
+1. **Executive Summary** - High-level overview of the most significant changes in the past 24 hours
+2. **Repository Breakdown** - Detailed summary for each repository with recent activity
+3. **Key Insights** - Important patterns, achievements, or concerns identified from today's activity
+4. **Next Steps** - Recommended actions based on the recent activity
+5. **Technical Highlights** - Notable technical changes or improvements from the past 24 hours
 
 FORMAT REQUIREMENTS:
+- Start with the title "Pulse AI: [Current Date] - Daily Summary"
 - Use proper markdown formatting
 - Include emojis for visual appeal and quick scanning
 - Group related changes logically
@@ -184,7 +185,7 @@ FORMAT REQUIREMENTS:
 - Extract actionable insights from commit messages and PR descriptions
 - Identify potential TODOs or follow-up items
 
-STYLE: Write in a clear, professional tone suitable for startup leadership review. Focus on what matters most for business and technical progress.
+STYLE: Write in a clear, professional tone suitable for startup leadership review. Focus on what matters most for business and technical progress. Make it feel like a daily pulse check on the team's progress.
 """
         
         return prompt
@@ -211,10 +212,10 @@ STYLE: Write in a clear, professional tone suitable for startup leadership revie
         """Generate a basic digest if Gemini fails."""
         today = datetime.now().strftime('%Y-%m-%d')
         
-        digest = f"""# AI Digest - {today}
+        digest = f"""# Pulse AI: {today} - Daily Summary
 
 ## Executive Summary
-Generated digest for the period {self.start_date.strftime('%Y-%m-%d')} to {self.end_date.strftime('%Y-%m-%d')}.
+Generated pulse digest for the last 24 hours ({self.start_date.strftime('%Y-%m-%d %H:%M')} to {self.end_date.strftime('%Y-%m-%d %H:%M')}).
 
 ## Repository Activity
 
@@ -241,11 +242,11 @@ Generated digest for the period {self.start_date.strftime('%Y-%m-%d')} to {self.
         
         # Create filename with actual time
         time_suffix = current_time.replace(':', '-')
-        filename = f"{today}-ai-digest-{time_suffix}.md"
+        filename = f"{today}-pulse-ai-{time_suffix}.md"
         filepath = self.digests_dir / filename
         
         # Add time header to content
-        header = f"# AI Digest - {today} ({time_suffix.title()})\n\n"
+        header = f"# Pulse AI: {today} - Daily Summary ({time_suffix.title()})\n\n"
         full_content = header + digest_content
         
         with open(filepath, 'w', encoding='utf-8') as f:
@@ -264,7 +265,7 @@ Generated digest for the period {self.start_date.strftime('%Y-%m-%d')} to {self.
             today = datetime.now().strftime('%Y-%m-%d')
             current_time = datetime.now().strftime('%H:%M UTC')
             
-            commit_message = f"🤖 Add AI Digest for {today} ({current_time})"
+            commit_message = f"🤖 Add Pulse AI for {today} ({current_time})"
             subprocess.run(['git', 'commit', '-m', commit_message], check=True)
             
             # Push
