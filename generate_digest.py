@@ -16,6 +16,7 @@ import google.generativeai as genai
 from pathlib import Path
 import subprocess
 import logging
+import yagmail
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -278,6 +279,30 @@ Generated pulse digest for the last 24 hours ({self.start_date.strftime('%Y-%m-%
         logger.info(f"Digest saved to {filepath}")
         return str(filepath)
     
+    def send_email(self, digest_content: str, digest_filepath: str):
+        """Send the digest as an email with the content and as an attachment."""
+        email_user = os.getenv('EMAIL_USER')
+        email_password = os.getenv('EMAIL_PASSWORD')
+        email_to = os.getenv('EMAIL_TO')
+        
+        if not (email_user and email_password and email_to):
+            logger.warning("Email credentials or recipient not set. Skipping email sending.")
+            return
+        
+        recipients = [addr.strip() for addr in email_to.split(',') if addr.strip()]
+        subject = f"Pulse AI Digest - {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}"
+        body = digest_content
+        try:
+            yag = yagmail.SMTP(user=email_user, password=email_password)
+            yag.send(
+                to=recipients,
+                subject=subject,
+                contents=[body, digest_filepath]
+            )
+            logger.info(f"Digest email sent to: {', '.join(recipients)}")
+        except Exception as e:
+            logger.error(f"Failed to send digest email: {e}")
+    
     def commit_and_push(self, filepath: str):
         """Commit and push the digest file to the repository."""
         try:
@@ -320,6 +345,9 @@ Generated pulse digest for the last 24 hours ({self.start_date.strftime('%Y-%m-%
             
             # Save digest
             filepath = self.save_digest(digest_content)
+            
+            # Send email
+            self.send_email(digest_content, filepath)
             
             # Commit and push
             self.commit_and_push(filepath)
