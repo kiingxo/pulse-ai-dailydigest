@@ -16,6 +16,7 @@ import google.generativeai as genai
 from pathlib import Path
 import subprocess
 import logging
+import pymsteams
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -278,6 +279,24 @@ Generated pulse digest for the last 24 hours ({self.start_date.strftime('%Y-%m-%
         logger.info(f"Digest saved to {filepath}")
         return str(filepath)
     
+    def send_teams_message(self, digest_content: str, digest_filepath: str):
+        """Send the full digest to Microsoft Teams via webhook."""
+        teams_webhook_url = os.getenv('TEAMS_WEBHOOK_URL')
+        if not teams_webhook_url:
+            logger.info("TEAMS_WEBHOOK_URL not set. Skipping Teams notification.")
+            return
+        try:
+            # Send the full digest content
+            teams_message = pymsteams.connectorcard(teams_webhook_url)
+            teams_message.title(f"Pulse AI Digest - {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}")
+            teams_message.text(digest_content)
+            # Add a link to the markdown file if possible (Teams webhooks can't upload files)
+            teams_message.addLinkButton("View Full Digest (Markdown)", "")
+            teams_message.send()
+            logger.info("Digest sent to Microsoft Teams.")
+        except Exception as e:
+            logger.error(f"Failed to send digest to Microsoft Teams: {e}")
+    
     def commit_and_push(self, filepath: str):
         """Commit and push the digest file to the repository."""
         try:
@@ -320,6 +339,9 @@ Generated pulse digest for the last 24 hours ({self.start_date.strftime('%Y-%m-%
             
             # Save digest
             filepath = self.save_digest(digest_content)
+            
+            # Send to Teams
+            self.send_teams_message(digest_content, filepath)
             
             # Commit and push
             self.commit_and_push(filepath)

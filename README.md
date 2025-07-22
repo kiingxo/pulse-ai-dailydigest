@@ -258,6 +258,3 @@ For issues and questions:
 ---
 
 ![Built by BlueprintLabs](https://img.shields.io/badge/built%20by-BlueprintLabs-0057ff?style=flat-square)
-
-**Built for BlueprintLabs** 🚀
-*Empowering AI startups with intelligent insights* 
